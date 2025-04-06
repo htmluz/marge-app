@@ -33,10 +33,9 @@ async function submitSignIn() {
 
 <template>
   <div class="login-container">
-    <h2 class="login-title">Sign Into Marge</h2>
+    <h2 class="login-title">Welcome Back to Marge</h2>
     <form @submit.prevent="submitSignIn" class="login-form">
       <div class="form-group">
-        <!-- <label for="username" class="label">Username:</label> -->
         <input
           type="text"
           id="username"
@@ -49,7 +48,6 @@ async function submitSignIn() {
         />
       </div>
       <div class="form-group">
-        <!-- <label for="password" class="label">Password:</label> -->
         <input
           type="password"
           id="password"
@@ -74,16 +72,12 @@ async function submitSignIn() {
 <style scoped>
 .login-container {
   position: absolute;
-  top: 50%;
+  top: 49%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: var(--background-color);
 
-  width: 420px;
+  width: 600px;
   padding: 25px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
 }
 
@@ -106,34 +100,45 @@ async function submitSignIn() {
 }
 
 .input {
-  height: 2.4rem;
-  padding-left: 6px;
-  padding-right: 6px;
-  border: 1px solid var(--border-color);
-  border-radius: 2px;
+  height: 3rem;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 1.2rem;
+  border: none;
+  background-color: var(--input-background-color);
+  border-radius: 8px;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  background-color: var(--input-focus-background-color);
+  border-radius: 0px;
+  box-shadow: 0 0 0 2px var(--focus-ring-color);
+  outline: none;
 }
 
 .submit-button {
-  height: 2.4rem;
-  border: 1px solid var(--border-color);
+  cursor: pointer;
+  height: 3rem;
+  border: none;
+  color: var(--button-text-color);
   background-color: var(--button-background-color);
-  font-size: 1rem;
-  border-radius: 2px;
+  font-size: 1.2rem;
+  border-radius: 8px;
   box-sizing: border-box;
-  transition: all 0.15s ease;
-}
-
-.submit-button:disabled {
-  background-color: var(--button-disabled-background-color);
+  transition:
+    border-radius 0.2s ease,
+    outline 0.05s ease;
 }
 
 .submit-button:not(:disabled):hover {
-  background-color: var(--button-hover-background-color);
+  border-radius: 0px;
 }
 
-.submit-button:not(:disabled):active {
-  background-color: var(--button-active-background-color);
-  border: 1px solid var(--button-active-border-color);
+.submit-button:not(:disabled):focus {
+  outline: 2px solid var(--button-background-color);
+  outline-style: dashed;
+  outline-offset: 4px;
 }
 </style>

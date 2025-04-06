@@ -1,22 +1,67 @@
 @import './base.css';
 
 :root {
-  --text-color: #555;
-  --border-color: #ccc;
+  --primary-color: #7e78d2;
+  --faded-primary-color: #e6e4ff;
+  --faded-focus-primary-color: #d1cfff;
+  --faded-secondary-color: #fbfbff;
+
   --background-color: #fff;
-  --button-background-color: #fff;
+  --hover-background-color: #eee;
+  --muted-background-color: #f6f6f6;
+
+  --input-background-color: #eee;
+  --input-focus-background-color: #ddd;
+
+  --border-color: #ccc;
+
+  --button-background-color: #000;
+  --button-text-color: #fff;
   --button-active-border-color: #999;
   --button-hover-background-color: #efefef;
   --button-active-background-color: #ededed;
   --button-disabled-background-color: #eee;
+
+  --text-color: #000;
+  --muted-text-color: #666;
+  --hover-text-color: #555;
+
+  --focus-ring-color: #7e78d2;
 }
 
 #app-container.dark {
-  --border-color: #333;
   --background-color: #000;
-  --button-background-color: #111;
+  --hover-background-color: #222;
+  --muted-background-color: #1b1b1b;
+
+  --input-background-color: #222;
+  --input-focus-background-color: #313131;
+
+  --border-color: #333;
+
+  --button-background-color: #eee;
+  --button-text-color: #000;
   --button-active-border-color: #444;
   --button-hover-background-color: #191919;
   --button-active-background-color: #181818;
   --button-disabled-background-color: #000;
+
+  --text-color: #fff;
+  --hover-text-color: #ccc;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--focus-ring-color);
+  transition: background-color 0.2s ease;
+  box-shadow: inset 0 0 3000px 20px var(--input-background-color);
+}
+
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--focus-ring-color);
+  transition: background-color 0.2s ease;
+  box-shadow: inset 0 0 3000px 20px var(--input-focus-background-color);
 }

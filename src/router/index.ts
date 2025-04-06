@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import SignInView from '@/views/SignInView.vue'
 import { useAuthStore } from '@/stores/auth'
+import UsersView from '@/views/UsersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,12 @@ const router = createRouter({
       // Saving for later
       // which is lazy-loaded when the route is visited.
       // component: () => import('../views/AboutView.vue'),
+    },
+    {
+      path: '/settings/users',
+      name: 'users',
+      meta: { requiresAuth: true },
+      component: UsersView,
     },
   ],
 })

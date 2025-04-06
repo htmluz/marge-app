@@ -12,7 +12,6 @@ const router = useRouter()
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 function handleSignOut() {
-  console.log('entrou')
   authStore.handleSignOut()
   router.push({ name: 'signin' })
 }
