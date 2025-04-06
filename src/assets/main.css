@@ -1,0 +1,22 @@
+@import './base.css';
+
+:root {
+  --text-color: #555;
+  --border-color: #ccc;
+  --background-color: #fff;
+  --button-background-color: #fff;
+  --button-active-border-color: #999;
+  --button-hover-background-color: #efefef;
+  --button-active-background-color: #ededed;
+  --button-disabled-background-color: #eee;
+}
+
+#app-container.dark {
+  --border-color: #333;
+  --background-color: #000;
+  --button-background-color: #111;
+  --button-active-border-color: #444;
+  --button-hover-background-color: #191919;
+  --button-active-background-color: #181818;
+  --button-disabled-background-color: #000;
+}
