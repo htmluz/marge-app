@@ -34,86 +34,208 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="main-container">
-    <div class="container-header">
+  <div class="users-container">
+    <div class="users-header">
       <h2 class="users-title">Users</h2>
+      <button class="btn-create"><i class="icon-plus"></i> New User</button>
     </div>
-    <table class="users-table">
-      <thead>
-        <tr class="header-row">
-          <th>Username</th>
-          <th>Full Name</th>
-          <th>Roles</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.id" class="user-row">
-          <td>{{ user.username }}</td>
-          <td>{{ user.full_name }}</td>
-          <td>Roles</td>
-          <td>
-            <button class="users-edit">i</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+    <div v-if="users.length > 0" class="table-container">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Permissions</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.id" class="user-row">
+            <td>{{ user.username }}</td>
+            <td>{{ user.full_name }}</td>
+            <td>
+              <div class="roles-container">
+                <span v-for="role in user.roles_perms" :key="role.role_id" class="role-badge">
+                  {{ role.role_name }}
+                </span>
+                <span v-if="!user.roles_perms || user.roles_perms.length === 0" class="no-roles">
+                  Nenhuma permissão
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-edit" title="Edit User">
+                  <i class=""></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <style scoped>
-#main-container {
+.users-container {
   background-color: var(--surface);
-  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  padding: 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
 .users-title {
-  margin-top: 0px;
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.btn-create {
+  background-color: var(--button-background);
+  color: var(--button-text-color);
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    opacity 0.2s,
+    border-radius 0.2s ease,
+    outline 0.05s ease;
+}
+
+.btn-create:hover {
+  border-radius: 0px;
+}
+
+.btn-create:focus {
+  outline: 2px solid var(--button-background);
+  outline-style: dashed;
+  outline-offset: 4px;
+}
+
+.icon-plus::before {
+  content: '+';
+  font-weight: bold;
+}
+
+.table-container {
+  overflow-x: auto;
+  flex-grow: 1;
 }
 
 .users-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
 }
 
-.users-table tbody tr:nth-child(odd) {
-  background-color: var(--muted-background-color);
+.users-table th {
+  text-align: left;
+  padding: 12px 16px;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
 }
 
-.users-table tbody tr:nth-child(odd):hover {
-  background-color: var(--hover-background-color);
-}
-
-.user-row td {
-  line-height: 2.1rem;
-  /* padding: 6px 0px; */
+.users-table td {
+  padding: 4px 16px;
+  border-bottom: 1px solid var(--divider);
+  color: var(--text-primary);
 }
 
 .user-row:hover {
-  background-color: var(--hover-background-color);
-  transition: background-color 0.05s ease;
+  background-color: var(--overlay);
 }
 
-.header-row th {
-  text-align: left;
-  padding: 0px 0px;
-  border-bottom: 1px solid var(--border-color);
+.roles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.users-edit {
-  position: relative;
-  top: -2px;
-  cursor: pointer;
-  border: none;
-  background-color: var(--button-background-color);
-  color: var(--button-text-color);
-  height: 1.3rem;
-  width: 1.3rem;
+.role-badge {
+  background-color: var(--input-background);
+  color: var(--text-secondary);
+  padding: 4px 8px;
   border-radius: 4px;
-  transition: border-radius 0.15s ease;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.users-edit:hover {
-  border-radius: 0px;
+.no-roles {
+  color: var(--text-disabled);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.btn-edit:hover {
+  border-color: var(--border-hover);
+}
+
+.icon-edit::before {
+  content: '✎';
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.loading-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  color: var(--text-secondary);
+  flex-grow: 1;
+  gap: 16px;
+}
+
+.empty-state p {
+  margin: 0 0 16px 0;
 }
 </style>

@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import PrimaryButton from '@/components/PrimaryButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -22,8 +23,12 @@ async function submitSignIn() {
       password: password.value,
     })
     router.push('/')
-  } catch (err: any) {
-    errorMessage.value = err.message || 'Ocorreu um erro durante o login'
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      errorMessage.value = err.message
+    } else {
+      errorMessage.value = 'Ocorreu um erro durante o login'
+    }
     console.error(err)
   } finally {
     isLoading.value = false
@@ -62,14 +67,23 @@ async function submitSignIn() {
 
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-      <button type="submit" class="submit-button" :disabled="isLoading">
-        {{ isLoading ? 'Signing In...' : 'Sign In' }}
-      </button>
+      <PrimaryButton
+        class="submit-btn"
+        :is-loading="isLoading"
+        default-text="Sign In"
+        loading-text="Signing In..."
+        type="submit"
+      ></PrimaryButton>
     </form>
   </div>
 </template>
 
 <style scoped>
+.submit-btn {
+  height: 3rem;
+  font-size: 1.2rem;
+}
+
 .login-container {
   position: absolute;
   top: 49%;
@@ -119,29 +133,5 @@ async function submitSignIn() {
   border-radius: 0px;
   box-shadow: 0 0 0 2px var(--focus-ring-color);
   outline: none;
-}
-
-.submit-button {
-  cursor: pointer;
-  height: 3rem;
-  border: none;
-  color: var(--button-text-color);
-  background-color: var(--button-background);
-  font-size: 1.2rem;
-  border-radius: 8px;
-  box-sizing: border-box;
-  transition:
-    border-radius 0.2s ease,
-    outline 0.05s ease;
-}
-
-.submit-button:not(:disabled):hover {
-  border-radius: 0px;
-}
-
-.submit-button:not(:disabled):focus {
-  outline: 2px solid var(--button-background);
-  outline-style: dashed;
-  outline-offset: 4px;
 }
 </style>
