@@ -20,7 +20,9 @@ const handleSignOut = () => {
 
 interface MenuItem {
   title: string
-  path: string | null
+  path: string
+  icon: string
+  active: boolean
   expanded: boolean
   children: MenuOptions[]
 }
@@ -28,6 +30,8 @@ interface MenuItem {
 interface MenuOptions {
   title: string
   path: string
+  icon: string
+  active: boolean
 }
 
 const menuItems = ref<MenuItem[]>([
@@ -35,41 +39,37 @@ const menuItems = ref<MenuItem[]>([
     title: 'Dashboard',
     path: '/dashboard',
     expanded: false,
+    active: false,
+    icon: '',
     children: [],
   },
   {
     title: 'SIP',
-    path: null,
+    path: '',
     expanded: false,
+    active: true,
+    icon: '',
     children: [
-      { title: 'Calls', path: '/sip/calls' },
-      { title: 'Register', path: '/sip/register' },
+      { title: 'Calls', path: '/sip/calls', icon: '', active: false },
+      { title: 'Register', path: '/sip/register', icon: '', active: true },
     ],
   },
   {
     title: 'Settings',
-    path: null,
+    path: '',
     expanded: false,
+    active: false,
+    icon: '',
     children: [
-      { title: 'Profile', path: '/settings/me' },
-      { title: 'Permissions', path: '/settings/permissions' },
-      { title: 'Users', path: '/settings/users' },
+      { title: 'Profile', path: '/settings/me', icon: '', active: false },
+      { title: 'Permissions', path: '/settings/permissions', icon: '', active: false },
+      { title: 'Users', path: '/settings/users', icon: '', active: false },
     ],
-  },
-  {
-    title: 'teste',
-    path: '/testes',
-    expanded: false,
-    children: [],
   },
 ])
 
 const toggleExpand = (item: MenuItem) => {
   item.expanded = !item.expanded
-}
-
-const hasChildren = (item: MenuItem) => {
-  return item.children && item.children.length > 0
 }
 
 // TODO: handlers for ctrl+k
@@ -187,29 +187,70 @@ onUnmounted(() => {})
       <div class="sidebar">
         <div class="sidebar-content">
           <nav class="sidebar-nav">
-            <ul>
-              <li v-for="(item, index) in menuItems" :key="index">
-                <div
-                  class="menu-item"
-                  @click="hasChildren(item) ? toggleExpand(item) : null"
-                  :class="{ 'has-children': hasChildren(item) }"
-                >
-                  <RouterLink v-if="item.path" :to="item.path" @click.stop class="menu-link">
-                    {{ item.title }}
-                  </RouterLink>
-                  <span v-else class="menu-title">{{ item.title }}</span>
-                  <span v-if="hasChildren(item)" class="expand-icon">
-                    {{ item.expanded ? '-' : '+' }}
-                  </span>
-                </div>
-                <ul v-if="hasChildren(item) && item.expanded" class="submenu">
-                  <li v-for="(child, childIndex) in item.children" :key="childIndex">
-                    <RouterLink :to="child.path" class="submenu-link">
-                      {{ child.title }}
+            <ul class="nav-list">
+              <div v-for="(item, index) in menuItems" :key="index" class="li-wrapper">
+                <li class="nav-li" :class="{ active: item.active }">
+                  <!-- Item com subitens -->
+                  <div
+                    v-if="item.children"
+                    class="menu-item expandable"
+                    @click="toggleExpand(item)"
+                  >
+                    <div class="menu-link">
+                      <div class="menu-content">
+                        <i :class="item.icon"></i>
+                        <span>{{ item.title }}</span>
+                      </div>
+                      <i
+                        v-if="item.children.length > 0"
+                        class="expand-icon"
+                        :class="item.expanded ? 'expanded' : ''"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          width="16"
+                          height="16"
+                          class="chevron"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                          />
+                        </svg>
+                      </i>
+                    </div>
+                  </div>
+
+                  <!-- Item sem subitens -->
+                  <div v-else class="menu-item">
+                    <RouterLink :to="item.path" class="menu-link">
+                      <div class="menu-content">
+                        <i :class="item.icon"></i>
+                        <span>{{ item.title }}</span>
+                      </div>
                     </RouterLink>
-                  </li>
-                </ul>
-              </li>
+                  </div>
+
+                  <!-- Subitens expansíveis -->
+                  <div v-if="item.children && item.expanded" class="submenu">
+                    <ul>
+                      <li v-for="(child, childIndex) in item.children" :key="childIndex">
+                        <div class="submenu-link" :class="{ active: child.active }">
+                          <RouterLink :to="child.path">
+                            <i v-if="child.icon" :class="child.icon"></i>
+                            <span>{{ child.title }}</span>
+                          </RouterLink>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </div>
             </ul>
           </nav>
         </div>
@@ -230,7 +271,7 @@ onUnmounted(() => {})
 
 .topbar {
   height: 2.4rem;
-  background-color: var(--faded-secondary-color);
+  background-color: var(--background);
   display: flex;
   align-items: center;
   padding: 0 8px;
@@ -247,14 +288,14 @@ onUnmounted(() => {})
 .abz {
   cursor: default;
   font-size: 2rem;
-  color: var(--primary-color);
+  color: var(--text-primary);
   font-weight: bold;
 }
 
 .app-title {
   cursor: default;
   font-size: 2rem;
-  color: var(--primary-color);
+  color: var(--text-primary);
   text-decoration: underline;
   font-weight: bold;
 }
@@ -272,7 +313,7 @@ onUnmounted(() => {})
 
 .sidebar {
   width: 220px;
-  background-color: var(--faded-secondary-color);
+  background-color: var(--background);
   overflow-y: auto;
 }
 
@@ -294,92 +335,37 @@ onUnmounted(() => {})
   text-decoration: none;
 }
 
-.menu-item {
-  display: flex;
-  justify-content: space-between;
-  text-decoration: none;
-  align-items: center;
-  padding: 0 6px;
-  cursor: pointer;
-}
-
-.menu-item a {
-  color: var(--text-color);
-  transition: color 0.3s ease;
-}
-
-.menu-item a:hover {
-  color: var(--hover-text-color);
-  background-color: var(--primary-color);
-}
-
-.menu-item.has-children {
-  cursor: pointer;
-}
-
-.expand-icon {
-  font-size: 0.8rem;
-  transition: transform 0.2s;
-}
-
 .submenu {
   padding-left: 16px !important;
-  background-color: var(--background-color);
+  background-color: var(--background);
 }
 
-.submenu-link {
-  display: block;
-  padding: 6px 8px;
-  text-decoration: none;
-  color: var(--text-color);
-  font-size: 0.9rem;
-  margin-left: 6px;
-  position: relative;
-  transition: color 0.3s ease;
-}
-
-.submenu-link::before {
-  content: 'L';
-  position: absolute;
-  color: var(--text-color);
-  top: 0.2rem;
-  left: -12px;
-  opacity: 0.7;
-  transition: color 0.3s ease;
-}
-
-.submenu-link:hover {
-  color: var(--hover-text-color);
-}
-
+/* alterar */
 .menu-title {
   display: block;
   padding: 8px 0;
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--text-primary);
   transition:
     background-color 0.2s,
     color 0.3s ease;
   flex-grow: 1;
 }
 
-.menu-title:hover {
-  color: var(--hover-text-color);
-}
-
 .sidebar-nav a {
   display: block;
   padding: 8px 0px;
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--text-primary);
   transition: background-color 0.2s;
 }
 
 .content-area {
   flex: 1;
-  border-top: 1px solid var(--focus-ring-color);
-  border-left: 1px solid var(--focus-ring-color);
-  border-top-left-radius: 16px;
+  border-top: 1px solid var(--divider);
+  border-left: 1px solid var(--divider);
+  background-color: var(--surface);
+  border-top-left-radius: 6px;
   overflow-y: auto;
   padding: 0px;
 }
@@ -392,8 +378,8 @@ onUnmounted(() => {})
   height: 1.9rem;
   width: 18%;
   max-width: 400px;
-  background-color: var(--faded-primary-color);
-  border-radius: 8px;
+  background-color: var(--input-background);
+  border-radius: 6px;
   transition: all 0.2s ease;
   padding-left: 8px;
   padding-right: 6px;
@@ -401,18 +387,16 @@ onUnmounted(() => {})
 
 .search-container:hover {
   border-radius: 0px;
-  background-color: var(--faded-focus-primary-color);
 }
 
 .search-container:focus-within {
-  background-color: var(--faded-focus-primary-color);
   border-radius: 0px;
   box-shadow: 0 0 0 2px var(--focus-ring-color);
 }
 
 .search-icon {
   flex-shrink: 0;
-  color: var(--muted-text-color);
+  color: var(--text-secondary);
   height: 16px;
   width: 16px;
   margin-right: 8px;
@@ -424,7 +408,7 @@ onUnmounted(() => {})
   cursor: pointer;
   border: none;
   background: transparent;
-  color: var(--text-color);
+  color: var(--text-primary);
   font-size: 0.9rem;
   height: 100%;
   padding: 0;
@@ -432,7 +416,7 @@ onUnmounted(() => {})
 }
 
 .search-input::placeholder {
-  color: var(--muted-text-color);
+  color: var(--text-secondary);
 }
 
 .shortcut-indicator {
@@ -441,10 +425,10 @@ onUnmounted(() => {})
   justify-content: center;
   margin-left: 8px;
   padding: 2px 5px;
-  background-color: var(--shortcut-bg-color, rgba(0, 0, 0, 0.07));
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   font-size: 0.8rem;
-  color: var(--muted-text-color);
+  color: var(--text-secondary);
   user-select: none;
 }
 
@@ -466,28 +450,24 @@ onUnmounted(() => {})
 .logout-btn {
   padding: 4px;
   background: none;
-  border: none;
+  border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 6px;
   cursor: pointer;
   line-height: 0;
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border 0.2s ease;
 }
 
-.theme-toggle-btn:hover {
-  background: var(--faded-primary-color);
-}
-
+.theme-toggle-btn:hover,
 .logout-btn:hover {
-  background: var(--faded-primary-color);
-}
-
-.logout-btn:hover .signout {
-  color: var(--text-color);
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .main-logo {
   position: relative;
-  color: var(--primary-color);
+  color: var(--text-primary);
   top: 5px;
   height: 2rem;
   width: 2rem;
@@ -495,27 +475,119 @@ onUnmounted(() => {})
 
 .theme-switch,
 .signout {
-  color: var(--primary-color);
+  color: var(--text-primary);
   height: 1.4rem;
   width: 1.4rem;
   display: block;
   transition: color 0.2s ease;
 }
 
-.theme-toggle-btn:hover .theme-switch {
-  color: var(--text-color);
-}
-
 .theme-icon-swap-enter-active,
 .theme-icon-swap-leave-active {
   transition:
-    opacity 0.1s ease,
-    transform 0.1s ease;
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .theme-icon-swap-enter-from,
 .theme-icon-swap-leave-to {
   opacity: 0;
   transform: scale(0.6) rotate(-30deg);
+}
+
+.sidebar-nav {
+  width: 100%;
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+.nav-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.li-wrapper {
+  margin: 0px 6px;
+  padding: 0;
+}
+
+.nav-li {
+  position: relative;
+}
+
+.menu-item {
+  cursor: pointer;
+}
+
+.menu-link {
+  display: flex;
+  user-select: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 2px;
+  padding-right: 4px;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  text-decoration: underline;
+}
+
+.menu-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.active .menu-link {
+  background-color: var(--surface);
+  border-left: 4px solid var(--focus-ring-color);
+}
+
+.chevron {
+  position: relative;
+  top: 2px;
+}
+
+.expand-icon .chevron {
+  transition: transform 0.15s linear;
+}
+
+.expand-icon.expanded .chevron {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  font-size: 0.9rem;
+}
+
+.submenu ul {
+}
+
+.submenu-link {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  padding: 0px 4px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 2px;
+  text-decoration: none;
+}
+
+.submenu-link:hover {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  text-decoration: underline;
+}
+
+.active.submenu-link {
+  background-color: var(--surface);
+  border-left: 3px solid var(--focus-ring-color);
 }
 </style>

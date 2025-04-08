@@ -63,6 +63,7 @@ onMounted(() => {
 
 <style scoped>
 #main-container {
+  background-color: var(--surface);
   padding: 8px;
 }
 

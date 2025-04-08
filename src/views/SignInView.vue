@@ -105,14 +105,17 @@ async function submitSignIn() {
   padding-right: 12px;
   font-size: 1.2rem;
   border: none;
-  background-color: var(--input-background-color);
+  background-color: var(--input-background);
   border-radius: 8px;
   box-sizing: border-box;
   transition: all 0.2s ease;
 }
 
+.input:hover {
+  border-radius: 0px;
+}
+
 .input:focus {
-  background-color: var(--input-focus-background-color);
   border-radius: 0px;
   box-shadow: 0 0 0 2px var(--focus-ring-color);
   outline: none;
@@ -123,7 +126,7 @@ async function submitSignIn() {
   height: 3rem;
   border: none;
   color: var(--button-text-color);
-  background-color: var(--button-background-color);
+  background-color: var(--button-background);
   font-size: 1.2rem;
   border-radius: 8px;
   box-sizing: border-box;
@@ -137,7 +140,7 @@ async function submitSignIn() {
 }
 
 .submit-button:not(:disabled):focus {
-  outline: 2px solid var(--button-background-color);
+  outline: 2px solid var(--button-background);
   outline-style: dashed;
   outline-offset: 4px;
 }
