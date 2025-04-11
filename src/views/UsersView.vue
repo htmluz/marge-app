@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import apiClient from '@/services/apiClient'
+import UserCreateModal from '@/components/UserCreateModal.vue'
 
 interface User {
   id: number
@@ -16,16 +17,25 @@ interface RolePerms {
 
 const users = ref<User[]>([])
 const error = ref('')
+const show_create_modal = ref(false)
 
 const fetchUsers = async () => {
   try {
-    const response = await apiClient.get('/users')
+    const response = await apiClient.get('/users/all')
     users.value = response.data.users
     console.log(users.value)
   } catch (err) {
     error.value = 'Erro buscando usuários'
     console.error(err)
   }
+}
+
+const openCreateModal = () => {
+  show_create_modal.value = true
+}
+
+const closeCreateModal = () => {
+  show_create_modal.value = false
 }
 
 onMounted(() => {
@@ -37,7 +47,9 @@ onMounted(() => {
   <div class="users-container">
     <div class="users-header">
       <h2 class="users-title">Users</h2>
-      <button class="btn-create"><i class="icon-plus"></i> New User</button>
+      <button class="btn-create" @click="openCreateModal">
+        <i class="icon-plus"></i> New User
+      </button>
     </div>
 
     <div v-if="users.length > 0" class="table-container">
@@ -75,6 +87,8 @@ onMounted(() => {
         </tbody>
       </table>
     </div>
+
+    <UserCreateModal v-if="show_create_modal" @close="closeCreateModal" />
   </div>
 </template>
 

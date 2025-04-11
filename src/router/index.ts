@@ -42,10 +42,13 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = authStore.isAuthenticated
 
   if (requiresAuth && !isAuthenticated) {
+    console.log('n ta')
     next({ name: 'signin' })
   } else if (to.name === 'signin' && isAuthenticated) {
+    console.log('ta')
     next({ name: 'home' })
   } else {
+    console.log('sbc')
     next()
   }
 })
