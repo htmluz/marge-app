@@ -44,10 +44,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="users-container">
+  <div class="default-container">
     <div class="users-header">
-      <h2 class="users-title">Users</h2>
-      <button class="btn-create" @click="openCreateModal">
+      <h2 class="content-title">Users</h2>
+      <button class="primary-button p-button" @click="openCreateModal">
         <i class="icon-plus"></i> New User
       </button>
     </div>
@@ -110,40 +110,9 @@ onMounted(() => {
   margin-bottom: 18px;
 }
 
-.users-title {
-  color: var(--text-primary);
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.btn-create {
-  background-color: var(--button-background);
-  color: var(--button-text-color);
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
+.p-button {
+  padding: 4px 12px;
   font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition:
-    opacity 0.2s,
-    border-radius 0.2s ease,
-    outline 0.05s ease;
-}
-
-.btn-create:hover {
-  border-radius: 0px;
-}
-
-.btn-create:focus {
-  outline: 2px solid var(--button-background);
-  outline-style: dashed;
-  outline-offset: 4px;
 }
 
 .icon-plus::before {
@@ -219,10 +188,6 @@ onMounted(() => {
   justify-content: center;
   cursor: pointer;
   transition: border-color 0.2s;
-}
-
-.btn-edit:hover {
-  border-color: var(--border-hover);
 }
 
 .icon-edit::before {

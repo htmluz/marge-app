@@ -1,8 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import SignInView from '@/views/SignInView.vue'
 import { useAuthStore } from '@/stores/auth'
 import UsersView from '@/views/UsersView.vue'
+import SipCallsView from '@/views/SipCallsView.vue'
+import DashboardView from '@/views/DashboardView.vue'
+import ProfileView from '@/views/ProfileView.vue'
+import RolesView from '@/views/RolesView.vue'
+import SipRegisterView from '@/views/SipRegisterView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,7 +14,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: DashboardView,
       meta: { requiresAuth: true },
     },
     {
@@ -18,15 +22,40 @@ const router = createRouter({
       name: 'signin',
       component: SignInView,
       meta: { requiresAuth: false },
-      // Saving for later
-      // which is lazy-loaded when the route is visited.
-      // component: () => import('../views/AboutView.vue'),
     },
     {
       path: '/settings/users',
       name: 'users',
       meta: { requiresAuth: true },
       component: UsersView,
+    },
+    {
+      path: '/settings/roles',
+      name: 'roles',
+      meta: { requiresAuth: true },
+      component: RolesView,
+    },
+    {
+      path: '/settings/me',
+      name: 'profile',
+      meta: { requiresAuth: true },
+      component: ProfileView,
+    },
+    {
+      path: '/sip/calls',
+      name: 'sip_calls',
+      meta: { requiresAuth: true },
+      component: SipCallsView,
+    },
+    {
+      path: '/sip/registers',
+      name: 'sip_registers',
+      meta: { requiresAuth: true },
+      component: SipRegisterView,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'signin' },
     },
   ],
 })
@@ -42,13 +71,10 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = authStore.isAuthenticated
 
   if (requiresAuth && !isAuthenticated) {
-    console.log('n ta')
     next({ name: 'signin' })
   } else if (to.name === 'signin' && isAuthenticated) {
-    console.log('ta')
     next({ name: 'home' })
   } else {
-    console.log('sbc')
     next()
   }
 })

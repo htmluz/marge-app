@@ -11,9 +11,9 @@ const router = useRouter()
 
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 
-function handleSignOut() {
-  authStore.handleSignOut()
-  router.push({ name: 'signin' })
+const handleSignOut = async () => {
+  await authStore.handleSignOut()
+  router.push('/signin')
 }
 
 onMounted(() => {

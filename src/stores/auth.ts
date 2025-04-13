@@ -25,6 +25,7 @@ export const useAuthStore = defineStore('auth', () => {
   // TODO: invalidar o token no banco
   async function handleSignOut() {
     sessionStorage.removeItem('access_token')
+    accessToken.value = null
   }
 
   function checkInitialAuth() {

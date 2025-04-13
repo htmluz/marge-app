@@ -39,6 +39,7 @@ const createUser = async () => {
     const response = await apiClient.post('/users/create', {
       username: username.value,
       password: password.value,
+      email: email.value,
       full_name: full_name.value,
       roles: selected_roles.value,
     })
@@ -69,22 +70,31 @@ fetchRoles()
   <div class="modal-overlay">
     <div class="modal-container">
       <div class="modal-header">
-        <h3>Create new user</h3>
+        <div class="zzz">
+          <h3>Create new user</h3>
+          <div v-if="error" class="error-message">{{ error }}</div>
+        </div>
         <button class="btn-close" @click="$emit('close')">×</button>
       </div>
 
       <div class="modal-body">
-        <div v-if="error" class="error-message">{{ error }}</div>
-
         <div class="modal-inputs">
           <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" v-model="username" type="text" placeholder="Username" required />
+            <input
+              class="primary-input"
+              id="username"
+              v-model="username"
+              type="text"
+              placeholder="Username"
+              required
+            />
           </div>
 
           <div class="form-group">
             <label for="full_name">Full Name</label>
             <input
+              class="primary-input"
               id="full_name"
               v-model="full_name"
               type="text"
@@ -95,12 +105,20 @@ fetchRoles()
 
           <div class="form-group">
             <label for="email">E-mail</label>
-            <input id="email" v-model="email" type="email" placeholder="E-mail" required />
+            <input
+              class="primary-input"
+              id="email"
+              v-model="email"
+              type="email"
+              placeholder="E-mail"
+              required
+            />
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
             <input
+              class="primary-input"
               id="password"
               v-model="password"
               type="password"
@@ -128,8 +146,8 @@ fetchRoles()
       </div>
 
       <div class="modal-footer">
-        <button class="btn-cancel" @click="$emit('close')">Cancelar</button>
-        <button class="btn-submit" @click="createUser" :disabled="is_submitting">
+        <button class="secondary-button" @click="$emit('close')">Cancelar</button>
+        <button class="primary-button p-button" @click="createUser" :disabled="is_submitting">
           {{ is_submitting ? 'Creating user...' : 'Create User' }}
         </button>
       </div>
@@ -156,7 +174,7 @@ fetchRoles()
   border-radius: 6px;
   border: 1px solid var(--border);
   width: 100%;
-  max-width: 1200px;
+  max-width: 850px;
   box-shadow: 0 4px 16px var(--shadow);
 }
 
@@ -169,6 +187,7 @@ fetchRoles()
 }
 
 .modal-header h3 {
+  cursor: default;
   margin: 0;
   color: var(--text-primary);
   font-size: 1.5rem;
@@ -201,13 +220,6 @@ fetchRoles()
   flex: 1;
 }
 
-.modal-inputs {
-  /* border-right: 1px solid var(--divider); */
-}
-
-.modal-roles {
-}
-
 .form-group {
   margin-bottom: 20px;
 }
@@ -220,25 +232,24 @@ fetchRoles()
   font-size: 14px;
 }
 
-.form-group input[type='text'] {
-  width: 80%;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background-color: var(--input-background);
-  color: var(--text-primary);
-  font-size: 14px;
-}
-
-.form-group input[type='text']:focus {
-  border-color: var(--focus-ring-color);
-  outline: none;
+.form-group input {
+  height: 2rem;
+  font-size: 1rem;
+  width: 95%;
 }
 
 .roles-selection {
   display: grid;
+  background-color: var(--input-background);
+  height: 86%;
+  border-radius: 8px;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  transition: border-radius 0.2s ease;
+}
+
+.roles-selection:hover {
+  border-radius: 0px;
 }
 
 .role-checkbox {
@@ -265,28 +276,26 @@ fetchRoles()
   cursor: pointer;
 }
 
-.btn-submit {
-  background-color: var(--button-background);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.p-button {
+  height: 2rem;
+  font-size: 1rem;
+  padding: 0px 12px;
 }
 
 .error-message {
+  cursor: default;
   background-color: #ffebee;
   color: #c62828;
-  padding: 12px 16px;
-  border-radius: 4px;
-  margin-bottom: 16px;
+  padding: 6px 16px;
+  border-radius: 8px;
+  margin-bottom: 0px;
   font-size: 14px;
+}
+
+.zzz {
+  display: flex;
+  width: 60%;
+  justify-content: space-between;
+  gap: 8px;
 }
 </style>

@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import PrimaryButton from '@/components/PrimaryButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -46,7 +45,7 @@ async function submitSignIn() {
           id="username"
           v-model="username"
           required
-          class="input"
+          class="primary-input"
           :disabled="isLoading"
           autocomplete="username"
           placeholder="Username"
@@ -58,7 +57,7 @@ async function submitSignIn() {
           id="password"
           v-model="password"
           required
-          class="input"
+          class="primary-input"
           :disabled="isLoading"
           autocomplete="current-password"
           placeholder="Password"
@@ -67,13 +66,9 @@ async function submitSignIn() {
 
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-      <PrimaryButton
-        class="submit-btn"
-        :is-loading="isLoading"
-        default-text="Sign In"
-        loading-text="Signing In..."
-        type="submit"
-      ></PrimaryButton>
+      <button type="submit" class="primary-button p-button" :disabled="isLoading">
+        {{ isLoading ? 'Signing In...' : 'Sign In' }}
+      </button>
     </form>
   </div>
 </template>
@@ -113,25 +108,8 @@ async function submitSignIn() {
   gap: 4px;
 }
 
-.input {
+.p-button {
   height: 3rem;
-  padding-left: 12px;
-  padding-right: 12px;
   font-size: 1.2rem;
-  border: none;
-  background-color: var(--input-background);
-  border-radius: 8px;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
-}
-
-.input:hover {
-  border-radius: 0px;
-}
-
-.input:focus {
-  border-radius: 0px;
-  box-shadow: 0 0 0 2px var(--focus-ring-color);
-  outline: none;
 }
 </style>

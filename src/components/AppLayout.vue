@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 defineProps({
   currentTheme: {
@@ -9,6 +10,8 @@ defineProps({
 })
 
 const emit = defineEmits(['toggle-theme', 'sign-out'])
+
+const route = useRoute()
 
 const toggleTheme = () => {
   emit('toggle-theme')
@@ -37,7 +40,7 @@ interface MenuOptions {
 const menuItems = ref<MenuItem[]>([
   {
     title: 'Dashboard',
-    path: '/dashboard',
+    path: '/',
     expanded: false,
     active: false,
     icon: '',
@@ -47,11 +50,11 @@ const menuItems = ref<MenuItem[]>([
     title: 'SIP',
     path: '',
     expanded: false,
-    active: true,
+    active: false,
     icon: '',
     children: [
       { title: 'Calls', path: '/sip/calls', icon: '', active: false },
-      { title: 'Register', path: '/sip/register', icon: '', active: true },
+      { title: 'Register', path: '/sip/registers', icon: '', active: false },
     ],
   },
   {
@@ -61,8 +64,8 @@ const menuItems = ref<MenuItem[]>([
     active: false,
     icon: '',
     children: [
+      { title: 'Roles and Permissions', path: '/settings/roles', icon: '', active: false },
       { title: 'Profile', path: '/settings/me', icon: '', active: false },
-      { title: 'Permissions', path: '/settings/permissions', icon: '', active: false },
       { title: 'Users', path: '/settings/users', icon: '', active: false },
     ],
   },
@@ -72,10 +75,47 @@ const toggleExpand = (item: MenuItem) => {
   item.expanded = !item.expanded
 }
 
+function updateActiveMenuItems(currentPath: string) {
+  menuItems.value.forEach((item) => {
+    item.active = false
+    if (item.children && item.children.length) {
+      item.children.forEach((child) => {
+        child.active = false
+      })
+
+      const matchedChild = item.children.find((child) => child.path === currentPath)
+      if (matchedChild) {
+        matchedChild.active = true
+        item.active = true
+        item.expanded = true
+      } else {
+        if (item.path && item.path === currentPath) {
+          item.active = true
+        }
+        item.expanded = false
+      }
+    } else {
+      if (item.path === currentPath) {
+        item.active = true
+      }
+    }
+  })
+}
+
+watch(
+  () => route.path,
+  (newPath) => {
+    updateActiveMenuItems(newPath)
+  },
+  { immediate: true },
+)
+
 // TODO: handlers for ctrl+k
 onMounted(() => {})
 
-onUnmounted(() => {})
+onUnmounted(() => {
+  updateActiveMenuItems(route.path)
+})
 </script>
 
 <template>
@@ -190,9 +230,8 @@ onUnmounted(() => {})
             <ul class="nav-list">
               <div v-for="(item, index) in menuItems" :key="index" class="li-wrapper">
                 <li class="nav-li" :class="{ active: item.active }">
-                  <!-- Item com subitens -->
                   <div
-                    v-if="item.children"
+                    v-if="item.children && item.children.length > 0"
                     class="menu-item expandable"
                     @click="toggleExpand(item)"
                   >
@@ -226,7 +265,6 @@ onUnmounted(() => {})
                     </div>
                   </div>
 
-                  <!-- Item sem subitens -->
                   <div v-else class="menu-item">
                     <RouterLink :to="item.path" class="menu-link">
                       <div class="menu-content">
@@ -236,7 +274,6 @@ onUnmounted(() => {})
                     </RouterLink>
                   </div>
 
-                  <!-- Subitens expansíveis -->
                   <div v-if="item.children && item.expanded" class="submenu">
                     <ul>
                       <li v-for="(child, childIndex) in item.children" :key="childIndex">
@@ -362,11 +399,13 @@ onUnmounted(() => {})
 
 .content-area {
   flex: 1;
+  /* TODO: check height */
+  height: calc(100vh - 2.1rem);
   border-top: 1px solid var(--divider);
   border-left: 1px solid var(--divider);
   background-color: var(--surface);
   border-top-left-radius: 6px;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 0px;
 }
 

@@ -5,6 +5,7 @@
   --surface: #f8f8f8;
   --input-background: #f0f0f0;
   --button-background: #000;
+  --secondary-button-background: var(--surface);
   --border: #e0e0e0;
   --border-hover: #c0c0c0;
   --text-primary: #212121;
@@ -81,7 +82,7 @@ input:-webkit-autofill:hover {
   -webkit-background-clip: text;
   -webkit-text-fill-color: var(--focus-ring-color);
   transition: background-color 0.2s ease;
-  box-shadow: inset 0 0 3000px 20px var(--input-background-color);
+  box-shadow: inset 0 0 3000px 20px var(--input-background);
 }
 
 input:-webkit-autofill:focus,
@@ -89,5 +90,100 @@ input:-webkit-autofill:active {
   -webkit-background-clip: text;
   -webkit-text-fill-color: var(--focus-ring-color);
   transition: background-color 0.2s ease;
-  box-shadow: inset 0 0 3000px 20px var(--input-focus-background-color);
+  box-shadow: inset 0 0 3000px 20px var(--input-background);
+}
+
+.primary-input {
+  height: 3rem;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 1.2rem;
+  border: none;
+  background-color: var(--input-background);
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.primary-input:hover {
+  border-radius: 0px;
+}
+
+.primary-input:focus {
+  border-radius: 0px;
+  box-shadow: 0 0 0 2px var(--focus-ring-color);
+  outline: none;
+}
+
+.primary-button {
+  cursor: pointer;
+  height: 2rem;
+  border: none;
+  color: var(--button-text-color);
+  background-color: var(--button-background);
+  font-size: 1rem;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition:
+    border-radius 0.2s ease,
+    outline 0.05s ease;
+}
+
+.primary-button:not(:disabled):hover {
+  border-radius: 0px;
+}
+
+.primary-button:not(:disabled):focus {
+  outline: 2px solid var(--button-background);
+  outline-style: dashed;
+  outline-offset: 4px;
+}
+
+.secondary-button {
+  cursor: pointer;
+  height: 2rem;
+  border: none;
+  background-color: transparent;
+  font-size: 1rem;
+  padding: 0px 12px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition:
+    border-radius 0.2s ease,
+    outline 0.05s ease,
+    color 0.2s ease;
+}
+
+.secondary-button:not(:disabled):hover {
+  border-radius: 0px;
+  color: var(--text-secondary);
+  border: none;
+}
+
+.secondary-button:not(:disabled):focus {
+  outline: 2px solid var(--text-primary);
+  outline-style: dashed;
+  outline-offset: 0px;
+}
+
+.secondary-button:not(:disabled):focus:hover {
+  outline: 2px solid var(--text-secondary);
+  outline-style: dashed;
+  outline-offset: 0px;
+}
+
+.content-title {
+  cursor: default;
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.default-container {
+  background-color: var(--surface);
+  padding: 24px;
+  height: calc(100vh - 5.1rem);
+  display: flex;
+  flex-direction: column;
 }
